@@ -6,7 +6,7 @@ interface TaskState {
   getTaskByStatus: ( status: TaskStatus ) => Task[];
 }
 
-const storeApi: StateCreator<TaskState> = ( set, get ) => ( {
+const storeApi: StateCreator<TaskState> = ( _, get ) => ( {
   tasks: {
     'abc-1': { id: 'abc-1', title: 'Task 1', status: 'open' },
     'abc-2': { id: 'abc-2', title: 'Task 2', status: 'in-progress' },
