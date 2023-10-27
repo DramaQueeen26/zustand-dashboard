@@ -10,8 +10,6 @@ const storageApi: StateStorage = {
 
       const data = await fetch( `${ firebaseUrl }/${ name }.json` ).then( res => res.json() );
 
-      console.log( { data } );
-
       return JSON.stringify( data );
 
     } catch ( error ) {
@@ -27,9 +25,7 @@ const storageApi: StateStorage = {
       body: value
     } ).then( res => res.json() );
 
-    console.log( { data } );
-
-    return;
+    return data;
 
   },
   removeItem: function ( name: string ): void | Promise<void> {

@@ -1,3 +1,4 @@
+import { devtools } from 'zustand/middleware';
 import { Task, TaskStatus } from '../../interfaces';
 import { StateCreator, create } from 'zustand';
 
@@ -13,9 +14,12 @@ const storeApi: StateCreator<TaskState> = ( _, get ) => ( {
   },
   getTaskByStatus: ( status: TaskStatus ) => {
     const tasks = get().tasks;
-    console.log( Object.values( tasks ) );
     return Object.values( tasks ).filter( task => task.status === status );
   }
 } );
 
-export const useTaskStore = create<TaskState>()( storeApi );
+export const useTaskStore = create<TaskState>()(
+  devtools(
+    storeApi
+  )
+);
