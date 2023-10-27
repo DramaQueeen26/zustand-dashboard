@@ -4,17 +4,28 @@ import { StateCreator, create } from 'zustand';
 
 interface TaskState {
   tasks: Record<string, Task>;
+  dragginTaskId?: string;
   getTaskByStatus: ( status: TaskStatus ) => Task[];
+  setDragginTaskId: ( taskId: string ) => void;
+  removeDragginTaskId: () => void;
 }
 
-const storeApi: StateCreator<TaskState> = ( _, get ) => ( {
+const storeApi: StateCreator<TaskState> = ( set, get ) => ( {
   tasks: {
     'abc-1': { id: 'abc-1', title: 'Task 1', status: 'open' },
     'abc-2': { id: 'abc-2', title: 'Task 2', status: 'in-progress' },
+    'abc-3': { id: 'abc-3', title: 'Task 2', status: 'in-progress' },
   },
+  dragginTaskId: undefined,
   getTaskByStatus: ( status: TaskStatus ) => {
     const tasks = get().tasks;
     return Object.values( tasks ).filter( task => task.status === status );
+  },
+  setDragginTaskId: ( taskId: string ) => {
+    set( { dragginTaskId: taskId } );
+  },
+  removeDragginTaskId: () => {
+    set( { dragginTaskId: undefined } );
   }
 } );
 
