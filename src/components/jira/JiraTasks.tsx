@@ -1,38 +1,35 @@
-import { DragEvent, useState } from 'react';
-import { IoCheckmarkCircleOutline, IoEllipsisHorizontalOutline } from 'react-icons/io5';
+import { IoAddOutline, IoCheckmarkCircleOutline } from 'react-icons/io5';
+import classNames from 'classnames';
+
 import { Task, TaskStatus } from '../../interfaces';
 import { SingleTask } from './SingleTask';
-import { useTaskStore } from '../../stores';
-import classNames from 'classnames';
+import { useTasks } from '../../hooks/useTasks';
+
+
+
 
 interface Props {
   title: string;
   tasks: Task[];
-  value: TaskStatus;
+  status: TaskStatus;
 }
 
-export const JiraTasks = ( { title, value, tasks }: Props ) => {
 
-  const isDraggin = useTaskStore( state => !!state.dragginTaskId );
-  const onTaskDrop = useTaskStore( state => state.onTaskDrop );
+export const JiraTasks = ( { title, status, tasks }: Props ) => {
+  console.log(status);
 
-  const [ onDragOver, setOnDragOver ] = useState( false );
+  const {
+    isDragging,
 
-  const handleDragOver = ( event: DragEvent<HTMLDivElement> ) => {
-    event.preventDefault();
-    setOnDragOver( true );
-  };
+    handleDragOver,
+    handleDragLeave,
+    handleDrop,
+    handleAddTask,
+    onDragOver,
 
-  const handleDragLeave = ( event: DragEvent<HTMLDivElement> ) => {
-    event.preventDefault();
-    setOnDragOver( false );
-  };
+  } = useTasks({ status });
 
-  const handleDrop = ( event: DragEvent<HTMLDivElement> ) => {
-    event.preventDefault();
-    setOnDragOver( false );
-    onTaskDrop( value );
-  };
+
 
   return (
     <div
@@ -40,10 +37,10 @@ export const JiraTasks = ( { title, value, tasks }: Props ) => {
       onDragLeave={ handleDragLeave }
       onDrop={ handleDrop }
       className={
-        classNames( "!text-black border-4 relative flex flex-col rounded-[20px]  bg-white bg-clip-border shadow-3xl shadow-shadow-500  w-full !p-4 3xl:p-![18px]", {
-          'border-blue-500 border-dotted': isDraggin,
-          'border-green-500 border-dotted': isDraggin && onDragOver
-        } )
+        classNames("!text-black border-4  relative flex flex-col rounded-[20px]  bg-white bg-clip-border shadow-3xl shadow-shadow-500  w-full !p-4 3xl:p-![18px]", {
+          'border-blue-500 border-dotted': isDragging,
+          'border-green-500 border-dotted': isDragging && onDragOver,
+        })
       }>
 
 
@@ -61,19 +58,23 @@ export const JiraTasks = ( { title, value, tasks }: Props ) => {
           <h4 className="ml-4 text-xl font-bold text-navy-700">{ title }</h4>
         </div>
 
-        <button>
-          <IoEllipsisHorizontalOutline />
+        <button onClick={ handleAddTask }>
+          <IoAddOutline />
         </button>
 
       </div>
 
       {/* Task Items */ }
       <div className="h-full w-full">
+
+
         {
           tasks.map( task => (
             <SingleTask key={ task.id } task={ task } />
           ) )
         }
+
+
 
       </div>
     </div>
