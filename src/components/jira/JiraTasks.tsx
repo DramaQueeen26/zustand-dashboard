@@ -16,7 +16,6 @@ interface Props {
 
 
 export const JiraTasks = ( { title, status, tasks }: Props ) => {
-  console.log(status);
 
   const {
     isDragging,

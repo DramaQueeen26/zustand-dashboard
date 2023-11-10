@@ -1,7 +1,10 @@
-import { type StateCreator, create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
+import { type StateCreator, create } from 'zustand';
+import { devtools, persist } from 'zustand/middleware';
+// import { customSessionStorage } from '../storages/session.storage';
 import { firebaseStorage } from '../storages/firebase.storage';
 import { logger } from '../middlewares/logger.middleware';
+
+
 
 interface PersonState {
   firstName: string;
@@ -13,20 +16,31 @@ interface Actions {
   setLastName: ( value: string ) => void;
 }
 
-type PersonStore = PersonState & Actions;
 
-const storeApi: StateCreator<PersonStore, [["zustand/devtools", never]]> = ( set ) => ( { // * El StateCreator lo usamos para separar el store de los middlewares
+const storeAPi: StateCreator<PersonState & Actions, [ [ "zustand/devtools", never ] ]> = ( set ) => ( {
+
   firstName: '',
   lastName: '',
-  setFirstName: ( value: string ) => set( { firstName: value }, false, 'setFirstName' ),
-  setLastName: ( value: string ) => set( { lastName: value }, false, 'setLastName' )
+
+  setFirstName: ( value: string ) => set( ( { firstName: value } ), false, 'setFirstName' ),
+  setLastName: ( value: string ) => set( ( { lastName: value } ), false, 'setLastName' ),
+
 } );
 
-export const usePersonStore = create<PersonStore>()(
-  logger(
-    devtools(
-      persist(
-        storeApi, //* Aquí va el store que está separado
-        { name: 'person-storage', storage: firebaseStorage } 
-  )))
-)
+
+
+
+
+
+export const usePersonStore = create<PersonState & Actions>()(
+  devtools(
+    persist(
+      storeAPi
+      , {
+        name: 'person-storage',
+        // storage: customSessionStorage,
+        // storage: firebaseStorage,
+      } )
+  )
+);
+
